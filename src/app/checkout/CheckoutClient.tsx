@@ -8,15 +8,20 @@ import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 import CheckoutForm from "./CheckoutForm";
 import Button from "@/components/Button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import Heading from "@/components/Heading";
+import { formatPrice } from "../../../utils/formatPrice";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
 
 const CheckoutClient = () => {
-    const { cartProducts, paymentIntent, handleSetPaymentIntent } = useCart();
+    const { cartTotalAmount, cartProducts, paymentIntent, handleSetPaymentIntent } = useCart();
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(false)
     const [clientSecret, setClientSecret] = useState('')
     const [paymentSuccess, setPaymentSuccess] = useState(false)
+    const formattedPrice = formatPrice(cartTotalAmount)
 
     const router = useRouter()
 
@@ -67,21 +72,23 @@ const CheckoutClient = () => {
 
     return (
         <div className="w-full">
-            {clientSecret && cartProducts &&(
-                <Elements options={options} stripe={stripePromise}>
-                    <CheckoutForm clientSecret={clientSecret} handleSetPaymentSuccess={handleSetPaymentSuccess} />
-                </Elements>
-            )}
-            {isLoading && <div className="text-center">Carregando...</div>}
-            {error && (<div className="text-center text-rose-500">Algo deu errado :(</div>)}
-            {paymentSuccess && (
-                <div className="flex items-center flex-col gap-4">
-                    <div className="text-teal-500 text-center">Pagamento feito com sucesso!</div>
-                    <div className="max-w-[220px] w-full">
-                        <Button label="Ver seus pedidos" onClick={() => router.push('/order')} />
-                    </div>
-                </div>
-            )}
+                    <form id="payment-form" className="text-center">
+                        <div className="mb-6">
+                            <Heading title="Insira os dados abaixo para finalizar sua compra" center/>
+                        </div>
+                        <Label htmlFor="Numero do Cartão De Credito" className="text-lg">Numero do cartão de credito</Label>
+                        <Input placeholder="**** **** **** ****" type="password" required/>
+                        <Label htmlFor="Data de vencimento" className="text-lg">Data de vencimento</Label>
+                        <Input placeholder="MM / YY" required/>
+                        <Label htmlFor="Codigo de segurança" className="text-lg">Codigo de segurança</Label>
+                        <Input placeholder="CVC" required/>
+                        <div className="py-4 text-center text-slate-700 text-xl font-bold">
+                            Total: {formattedPrice}
+                        </div>
+                        <Button label={isLoading ? 'Processando' : 'Pague agora'} onClick={() => {router.push('/cart')}} />
+                        <p>Versão para testes</p>
+                        <p>Nada sera cobrado de qualquer cartão inserido</p>
+                    </form>
         </div>
     );
 }

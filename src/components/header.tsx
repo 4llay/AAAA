@@ -4,7 +4,6 @@ import { Courgette } from 'next/font/google'
 import { ThemeButton } from '@/components/theme-button';
 import dynamic from 'next/dynamic';
 import { getCurrentUser } from '../../actions/getCurrentUser';
-const bcrypt = require('bcrypt');
 
 const courgette = Courgette({
     subsets: ['latin'],
@@ -39,7 +38,7 @@ export async function Header() {
 
                             {/* Nossos contatos */}
                             <li>
-                                <a className="hidden md:flex text-[1.5em] lg:text-[1.7em] xl:text-[2rem] text-slate-500 hover:text-red-500 cursor-pointer dark:text-DarkTextColor" target="_blank" href="https://instagram.com/lg_trufadasso">Contato</a>
+                                <a className="hidden md:flex text-[1.5em] lg:text-[1.7em] xl:text-[2rem] text-slate-500 hover:text-red-500 cursor-pointer dark:text-DarkTextColor" target="_blank" href="https://instagram.com/lg_trufadasso"> contato</a>
                             </li>
 
                             {/* linha de separação */}
